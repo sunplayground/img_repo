@@ -80,7 +80,7 @@ email_list as ( --ok
     where 
         date(from_unixtime(t1.create_timestamp - 3600)) between (select distinct deals_start_date from cmi_input) and (select distinct deals_end_date from cmi_input)  -- check
         -- and if((select exclude_date from cmi_input) is null, true, date(from_unixtime(t1.create_timestamp - 3600)) not in (select exclude_date from cmi_input))   -- check
-        and if((select exclude_date_regex from cmi_input) = '', true, regexp_like(cast(date(from_unixtime(t1.create_timestamp - 3600)) as varchar), (select exclude_date_regex from cmi_input)))
+        and if((select exclude_date_regex from cmi_input) = '', true,not regexp_like(cast(date(from_unixtime(t1.create_timestamp - 3600)) as varchar), (select exclude_date_regex from cmi_input)))
         
         and if(false=cast(${param_filter_itemid} as boolean), true,t1.item_id in ${param_itemid_list})
         and if(false=cast(${param_filter_shopid} as boolean), true,t1.shop_id in ${param_shopid_list})
